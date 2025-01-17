@@ -13,6 +13,14 @@ class Job extends Model {
     // Specifica i campi che possono essere assegnati in modo massivo
     protected $fillable = ['title', 'salary'];
 
+    //belongsTo ->È una relazione molti-a-uno: ad esempio, molti "Job Listings" possono appartenere a un singolo "Employer"
+    public function employer() {
+        return $this->belongsTo(Employer::class);
+    }
+
+    //altre relazioni hasOne(Profile::class) cioè un record in una tabella è associato a un solo record in un'altra tabella
+    //altre relazioni hasMany(Profile::class) cioè un record in una tabella è associato a molti record in un'altra tabella.
+
     //METODO CHE PRENDE I DATI DIRETTAMENTE DA CODICE; FISSI (non serve mettere extends Model)
         // public static function all (): array
         // {

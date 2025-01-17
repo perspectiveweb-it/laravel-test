@@ -71,6 +71,8 @@ Route::get('/jobs/{id}', function ($id) {
     // ]
 
     $job = Job::find($id);
+    // $employer = $job->employer->name; AZIENDA associata all'ID
+
     return view('job', [
         'job' => $job,
         'title' => 'Sono la pagina singola di'
