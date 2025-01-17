@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 class Job extends Model {
-
+    use HasFactory;
     //serve solo se il modello non lo chiamiamo come la migrazione, in uesto caso si doveva chiamare JobListing
     protected $table = 'job_listings';
     // Specifica i campi che possono essere assegnati in modo massivo
