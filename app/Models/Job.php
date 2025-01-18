@@ -18,6 +18,20 @@ class Job extends Model {
         return $this->belongsTo(Employer::class);
     }
 
+    //belongsToMany Un record in un modello può essere associato a più record di un altro modello e viceversa.
+    public function tags() {
+        return $this->belongsToMany(Tag::class, foreignPivotKey:"job_listing_id");
+    }
+
+    // Esempio di scenario
+    // Immaginiamo che tu stia creando un'app per gestire offerte di lavoro (Job) e tag (Tag).
+
+    // Tabelle:
+    // jobs: contiene le informazioni sulle offerte di lavoro.
+    // tags: contiene i tag (ad esempio "Full-time", "Remote").
+    // job_tag: una tabella pivot che collega jobs e tags.
+
+
     //altre relazioni hasOne(Profile::class) cioè un record in una tabella è associato a un solo record in un'altra tabella
     //altre relazioni hasMany(Profile::class) cioè un record in una tabella è associato a molti record in un'altra tabella.
 

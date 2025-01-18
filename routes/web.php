@@ -32,10 +32,19 @@ Route::get('/', function () {
     ]);
 });
 
+
+//problemi prestazioni, se noi passiamo direttamente alla vista 'jobs' => Job::all() questa lanciera una query per ogni jobs
+//soluzione $jobs = Job::with(['employer'])->get();
 Route::get('/jobs', function () {
+    // $jobs = Job::with(['tags', 'employer'])->select('id', 'title', 'salary')->get(); con get() li prende tutti
+    $jobs = Job::with(['employer','tags'])->paginate(3);
+
     return view('jobs', [
         'title' => ' Sono la pagina Jobs',
-        'jobs' => Job::all()
+        'jobs' => $jobs
+
+        // 'jobs' => Job::all()
+
         // 'jobs' => [
         //     [
         //         'id' => 1,
