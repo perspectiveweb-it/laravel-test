@@ -1,5 +1,6 @@
 <x-layout>
     <h1 class="ma-auto text-[6rem]">{{$title}}</h1>
+    <x-button href="/jobs/create" class="my-10 mr-auto">Aggiungi un lavoro</x-button>
     <div class="grid grid-cols-3 gap-6">
         @foreach ($jobs as $job)
             <a class="px-6 py-10 bg-slate-400 flex flex-col items-start rounded-md space-y-3" href="/jobs/{{$job['id']}}">

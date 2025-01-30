@@ -11,7 +11,8 @@ class Job extends Model {
     //serve solo se il modello non lo chiamiamo come la migrazione, in uesto caso si doveva chiamare JobListing
     protected $table = 'job_listings';
     // Specifica i campi che possono essere assegnati in modo massivo
-    protected $fillable = ['title', 'salary'];
+    protected $fillable = ['title', 'salary','employer_id'];
+    // protected $guarded = []; non protteggo nessun dato, non serve dichiarare fillable
 
     //belongsTo ->È una relazione molti-a-uno: ad esempio, molti "Job Listings" possono appartenere a un singolo "Employer"
     public function employer() {
