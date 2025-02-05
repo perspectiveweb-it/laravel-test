@@ -6,6 +6,12 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 
 
+// Route::get si riferisce all'ottenimento di una pagina
+// Route::post si riferisce all'invio di un modulo che memorizza alcuni dati nel db
+// Route::patch si riferisce all'aggiornamento di una risorsa
+// Route::delete si riferisce alla distruzione di una risorsa
+
+
 // UN ESEMPIO, MA MEGLIO USARE CLASS
 //$jobs = [
 //     [  'id' => 1,
@@ -35,13 +41,15 @@ Route::get('/', function () {
 
 //problemi prestazioni, se noi passiamo direttamente alla vista 'jobs' => Job::all() questa lanciera una query per ogni jobs
 //soluzione $jobs = Job::with(['employer'])->get();
+
+//index.blade.php folder jobs
 Route::get('/jobs', function () {
     // $jobs = Job::with(['tags', 'employer'])->select('id', 'title', 'salary')->get(); con get() li prende tutti
 
     //paginate(3) paginate vista classica però il calcolo delle pagine potrebbe comportare problemi di prestazioni se ci sono miglioni elementi
     //simplePaginate(3); simple paginate avrà solo torna indietro o vai avanti
     //cursorPaginate  più performante di tutte, ma non crea delle vere e proprie pagina ma url casuali per passare alle pagine precendenti e successive quindi se voglio vedere i risultati di pagina 12 non posso.
-    $jobs = Job::with(['employer','tags'])->latest()->simplePaginate(20);
+    $jobs = Job::with(['employer', 'tags'])->latest()->simplePaginate(20);
 
     return view('jobs.index', [
         'title' => ' Sono la pagina Jobs',
@@ -71,14 +79,15 @@ Route::get('/jobs', function () {
 });
 
 //Rotta per creare con un form un nuovo lavoro, deve essere sopra a quello del singolo jobs sennò mi da un errore perchè pensa che create sia un parametro id
+//create.blade.php folder jobs
 Route::get('/jobs/create', function () {
-    return view('jobs.create',[
-            'title' => 'Sono la pagina create'
+    return view('jobs.create', [
+        'title' => 'Sono la pagina create'
     ]);
 });
 
 //Rotta per vedere il singolo jobs
-
+//show.blade.php folder jobs
 Route::get('/jobs/{id}', function ($id) {
     // Arr::first($jobs,function($job) {
     //     return $job['id'] == $id;
@@ -101,8 +110,66 @@ Route::get('/jobs/{id}', function ($id) {
     ]);
 });
 
-//per il form bisogna creare un route con POST
-Route::post('/jobs',function(){
+//edit.blade.php folder jobs
+Route::get('/jobs/{id}/edit', function ($id) {
+
+    $job = Job::find($id);
+
+    return view('jobs.edit', [
+        'job' => $job,
+        'title' => 'Sono la pagina di edit'
+    ]);
+});
+
+// a differenza del metodo post dove devi cambiare il riferimento patch devi tenero lo stesso che vuoi modificare
+//Route::get('/jobs/{id}' noi vogliamo modificare questo quindi bisogna tenerlo uguale
+
+//update
+Route::patch('/jobs/{id}', function ($id) {
+    //validate
+    request()->validate([
+        'title' => ['required', 'min:3'],
+        'salary' => ['required'],
+    ]);
+
+    //authorize (on hold)
+
+    //$job = Job::find($id); se usa questo e non esiste a db un lavoro con quell'id restituirebbe null
+    //e poi con $job->update(), crasha l'app
+    $job = Job::findOrFail($id);
+
+    //update the job
+
+    //versione 1
+    // $job->title = request('title');
+    // $job->salary = request('salary');
+    // $job->save();
+
+    // versione2 breve
+    $job->update([
+        'title' => request('title'),
+        'salary' => request('salary')
+    ]);
+
+    //and persist
+    return redirect('/jobs/' . $job->id);
+
+
+    // return view('jobs.show', ['job' => $job]);
+});
+
+//delete
+Route::delete('/jobs/{id}', function ($id) {
+
+    $job = Job::findOrFail($id);
+    $job->delete();
+
+    return redirect('/jobs');
+});
+
+
+//per il form per creare un lavoro bisogna creare un route con POST
+Route::post('/jobs', function () {
     /* dd(request()->all());
     array:3 [▼ // routes/web.php:106
         "_token" => "r7uMHHOn3gtda6lN0ttuPBXsFUHFdzPBiRqV9nXg"
@@ -113,7 +180,7 @@ Route::post('/jobs',function(){
     */
 
     request()->validate([
-        'title' => ['required','min:3'],
+        'title' => ['required', 'min:3'],
         'salary' => ['required'],
     ]);
 
@@ -145,4 +212,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
