@@ -52,11 +52,25 @@
             </div>
         </div>
 
-        <div class="mt-6 flex items-center justify-end gap-x-6">
-            <a href="/jobs/{{$job->id}}" class="text-sm/6 font-semibold text-gray-900">Torna Indietro</a>
-            <button type="submit"
-                class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Uptade</button>
+        <div class="mt-6 flex justify-between">
+            <button form="form-delete"
+                class="block rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                Delete
+            </button>
+            <div class="flex items-center justify-end gap-x-6">
+                <a href="/jobs/{{$job->id}}" class="text-sm/6 font-semibold text-gray-900">Torna Indietro</a>
+                <button type="submit"
+                    class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Uptade
+                </button>
+            </div>
         </div>
     </form>
+    {{-- Per cancellare un record devo creare un form però non posso avere un form all'interno del form
+    quindi uso <button form="form-delete"> e fuori dal form creo questo form  --}}
+        <form class="hidden" method="POST" action="/jobs/{{ $job->id }}" id="form-delete">
+            @csrf
+            @method('DELETE')
+        </form>
 
 </x-layout>

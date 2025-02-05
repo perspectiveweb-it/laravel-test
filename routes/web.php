@@ -88,32 +88,43 @@ Route::get('/jobs/create', function () {
 
 //Rotta per vedere il singolo jobs
 //show.blade.php folder jobs
-Route::get('/jobs/{id}', function ($id) {
-    // Arr::first($jobs,function($job) {
-    //     return $job['id'] == $id;
-    // });
+//versione lunga
+// Route::get('/jobs/{id}', function ($id) {
+//                 // Arr::first($jobs,function($job) {
+//                 //     return $job['id'] == $id;
+//                 // });
 
-    // $job=Arr::first(Job::all(),fn($job) => $job['id'] == $id);
-    // dd($job);
-    // array:3 [▼
-    //     "id" => 1
-    //     "title" => "Directory"
-    //     "salary" => "$5000"
-    // ]
+//                 // $job=Arr::first(Job::all(),fn($job) => $job['id'] == $id);
+//                 // dd($job);
+//                 // array:3 [▼
+//                 //     "id" => 1
+//                 //     "title" => "Directory"
+//                 //     "salary" => "$5000"
+//                 // ]
 
-    $job = Job::find($id);
-    // $employer = $job->employer->name; AZIENDA associata all'ID
+
+//     $job = Job::find($id);
+//                 // $employer = $job->employer->name; AZIENDA associata all'ID
+
+//     return view('jobs.show', [
+//         'job' => $job,
+//         'title' => 'Sono la pagina singola di'
+//     ]);
+// });
+
+//vesione abbreviata route binding, non serve più che passo $job = Job::find($id);
+Route::get('/jobs/{job}', function (Job $job) {
 
     return view('jobs.show', [
-        'job' => $job,
-        'title' => 'Sono la pagina singola di'
+    'job' => $job,
+    'title' => 'Sono la pagina singola di'
     ]);
 });
 
 //edit.blade.php folder jobs
-Route::get('/jobs/{id}/edit', function ($id) {
+Route::get('/jobs/{job}/edit', function (Job $job) {
 
-    $job = Job::find($id);
+    // $job = Job::find($id);
 
     return view('jobs.edit', [
         'job' => $job,
@@ -125,7 +136,7 @@ Route::get('/jobs/{id}/edit', function ($id) {
 //Route::get('/jobs/{id}' noi vogliamo modificare questo quindi bisogna tenerlo uguale
 
 //update
-Route::patch('/jobs/{id}', function ($id) {
+Route::patch('/jobs/{job}', function (Job $job) {
     //validate
     request()->validate([
         'title' => ['required', 'min:3'],
@@ -136,7 +147,9 @@ Route::patch('/jobs/{id}', function ($id) {
 
     //$job = Job::find($id); se usa questo e non esiste a db un lavoro con quell'id restituirebbe null
     //e poi con $job->update(), crasha l'app
-    $job = Job::findOrFail($id);
+
+    //Non serve più perchè abbiamo messo Route::patch('/jobs/{job}', function (Job $job) {
+    // $job = Job::findOrFail($id);
 
     //update the job
 
@@ -159,9 +172,9 @@ Route::patch('/jobs/{id}', function ($id) {
 });
 
 //delete
-Route::delete('/jobs/{id}', function ($id) {
+Route::delete('/jobs/{job}', function (Job $job) {
 
-    $job = Job::findOrFail($id);
+    // $job = Job::findOrFail($id);
     $job->delete();
 
     return redirect('/jobs');
