@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Job;
@@ -15,17 +16,38 @@ use Illuminate\Support\Facades\Route;
 
 //scrittura breve se dobbiamo solo far vedere una pagina, solitamente pagine statiche
 Route::view('/', 'home', ['title' => 'Sono la home']);
+Route::view('/contact', 'contact', ['title' => 'Sono la pagina contact']);
 
 //jobs
-Route::get('/jobs', [JobController::class,'index']);
-Route::get('/jobs/create',[JobController::class,'create']);
-Route::get('/jobs/{job}',[JobController::class,'show']);
-Route::post('/jobs',[JobController::class,'store']);
-Route::get('/jobs/{job}/edit',[JobController::class,'edit']);
-Route::patch('/jobs/{job}',[JobController::class,'update']);
-Route::delete('/jobs/{job}',[JobController::class,'delete']);
+//1
+// Route::get('/jobs', [JobController::class,'index']);
+// Route::get('/jobs/create',[JobController::class,'create']);
+// Route::get('/jobs/{job}',[JobController::class,'show']);
+// Route::post('/jobs',[JobController::class,'store']);
+// Route::get('/jobs/{job}/edit',[JobController::class,'edit']);
+// Route::patch('/jobs/{job}',[JobController::class,'update']);
+// Route::delete('/jobs/{job}',[JobController::class,'delete']);
 
-Route::view('/contact', 'contact', ['title' => 'Sono la pagina contact']);
+//v2
+// Route::controller(JobController::class)->group(function(){
+//     Route::get('/jobs', 'index');
+//     Route::get('/jobs/create', 'create');
+//     Route::get('/jobs/{job}', 'show');
+//     Route::post('/jobs', 'store');
+//     Route::get('/jobs/{job}/edit', 'edit');
+//     Route::patch('/jobs/{job}', 'update');
+//     Route::delete('/jobs/{job}', 'destroy');
+// });
+
+//resource fa tutto in automatico bisogna sempre usare questa convenzione  index/create/show/store/edit/update/destroy.
+Route::resource('jobs', JobController::class);
+
+//resource scritto come sopra le crea sempre tutte, ma in certi casi ci servono solo alcune
+// Route::resource('jobs', JobController::class, [
+//     possiamo usare o only o except
+//     'only' => [],
+//     'except' => ['edit'],
+// ]);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

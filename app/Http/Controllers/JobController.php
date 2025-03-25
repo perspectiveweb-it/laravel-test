@@ -70,22 +70,11 @@ class JobController extends Controller
         return redirect('/jobs/' . $job->id);
     }
 
-    public function delete(Job $job)
+    public function destroy(Job $job)
     {
         $job->delete();
 
         return redirect('/jobs');
     }
 
-
-    //converto presente su web con una funziona
-
-    // Route::delete('/jobs/{job}', function (Job $job) {
-
-    //     $job->delete();
-
-    //     return redirect('/jobs');
-    // });
-    public function destroy()
-    {}
 }
